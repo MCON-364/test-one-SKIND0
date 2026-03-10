@@ -2,6 +2,8 @@ package edu.touro.las.mcon364.test;
 
 import java.util.*;
 
+import static java.lang.Double.parseDouble;
+
 public class StudyTracker {
 
     private final Map<String, List<Integer>> scoresByLearner = new HashMap<>();
@@ -25,7 +27,11 @@ public class StudyTracker {
      * Throw IllegalArgumentException if name is null or blank.
      */
     public boolean addLearner(String name) {
-        throw new UnsupportedOperationException();
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        scoresByLearner.put(name, new ArrayList<>());
+        return !name.equals(scoresByLearner.keySet().iterator().next());
     }
 
     /**
@@ -42,7 +48,12 @@ public class StudyTracker {
      * This operation should be undoable.
      */
     public boolean addScore(String name, int score) {
-        throw new UnsupportedOperationException();
+        if (score > 100 || score < 0) {
+            throw new IllegalArgumentException();
+        }
+        scoresByLearner.get(name).add(score);
+        return !name.equals(scoresByLearner.keySet().iterator().next());
+
     }
 
     /**
@@ -54,7 +65,13 @@ public class StudyTracker {
      * - the learner has no scores
      */
     public Optional<Double> averageFor(String name) {
-        throw new UnsupportedOperationException();
+        var learner = scoresByLearner.get(name);
+        if (learner == null || learner.isEmpty()) {
+            return Optional.empty();
+        }
+        Double sum = scoresByLearner.get(name).stream().mapToDouble(l -> l).sum();
+        Double count = (double) learner.size();
+        return Optional.of(sum / count);
     }
 
     /**
@@ -70,8 +87,22 @@ public class StudyTracker {
      * Return Optional.empty() when no average exists.
      */
     public Optional<String> letterBandFor(String name) {
-        throw new UnsupportedOperationException();
+        if (averageFor(name).isEmpty()) {
+            return Optional.empty();
+        }
+        var av = averageFor(name);
+        if (av >= 90)
+            return "A";
+        else if (av >= 80)
+            return "B";
+        else if (av >=70)
+            return "C";
+        else if (av >=60)
+            return "D";
+        else
+            return "F";
     }
+    //it's like this cuz the switch gave me so many errors i want to leave it like this for a second. i'll get back
 
     /**
      * Problem 15
@@ -81,7 +112,10 @@ public class StudyTracker {
      * Return false if there is nothing to undo.
      */
     public boolean undoLastChange() {
-        throw new UnsupportedOperationException();
+        UndoStep undoStep = undoStack.pollLast();
+        assert undoStep != null;
+        undoStep.undo();
+        return !undoStack.isEmpty();
     }
 
 
