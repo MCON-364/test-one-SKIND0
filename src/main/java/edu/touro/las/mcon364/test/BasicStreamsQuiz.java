@@ -1,6 +1,9 @@
 package edu.touro.las.mcon364.test;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
 
 public class BasicStreamsQuiz {
 
@@ -19,7 +22,12 @@ public class BasicStreamsQuiz {
      * Return all course names sorted alphabetically.
      */
     public List<String> getSortedCourseNames() {
-        throw new UnsupportedOperationException();
+        //return stream().sort().toString();
+        //return scoresByCourse.keySet().stream().sorted().toList();
+        // professor i get that you want me to use collections somehow, but i don't get how. and i really did study this
+
+        Map<String, List<Integer>> result = scoresByCourse.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()));
+        return result.keySet().stream().collect(Collectors.toList());
     }
 
     /**
@@ -27,8 +35,11 @@ public class BasicStreamsQuiz {
      * Across all courses, count how many scores are greater than or equal to threshold.
      */
     public long countScoresAtLeast(int threshold) {
-        throw new UnsupportedOperationException();
+        // scoresByCourse.stream().filter(count -> count >= threshold).count();
+        //return x -> x.stream().filter(count -> count >= threshold).count();
+
     }
+    //fyi there's no groupingby or tomap which is mostly what i practiced. this is all with a map where value is a list which i see now i practiced the least and don't know the syntax very well at all.
 
     /**
      * Problem 8
@@ -36,16 +47,17 @@ public class BasicStreamsQuiz {
      * If none exists, return Optional.empty().
      */
     public Optional<String> firstLongWord(List<String> words, int minLength) {
-        throw new UnsupportedOperationException();
+        return Optional.of(words.stream().filter(x -> x.length() > minLength).findFirst());
     }
-
     /**
      * Problem 9
      * Return a new list containing the square of each number.
      * Use streams.
      */
     public List<Integer> squareAll(List<Integer> numbers) {
-        throw new UnsupportedOperationException();
+        return numbers.stream().map(x -> x^2).toList();
+        //i might be doing the math wrong. the math.pow isn't working either if that's what i'm meant to do even.
+
     }
 
     /**
@@ -56,6 +68,11 @@ public class BasicStreamsQuiz {
      * Return 0.0 if there are no passing scores.
      */
     public double averagePassingScore() {
-        throw new UnsupportedOperationException();
+        //List<Double> scores = scoresByCourse.stream().filter(score -> score >= 70).toList().;
+        //int count = scoresByCourse.size();
+        //return (double) count / (double) scores.size();
+
+
+
     }
 }
